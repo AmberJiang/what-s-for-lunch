@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>今天吃什么</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f8f8f8;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #e74c3c;
+            margin-bottom: 30px;
+        }
+        
+        .result {
+            font-size: 28px;
+            font-weight: bold;
+            margin: 30px 0;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .food-name {
+            color: #e74c3c;
+            font-size: 36px;
+        }
+        
+        .reason {
+            font-size: 16px;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+        
+        .categories {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .category-btn {
+            background: #ecf0f1;
+            color: #2c3e50;
+            margin: 5px;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+        }
+        
+        .category-btn.active {
+            background: #e74c3c;
+            color: white;
+        }
+        
+        .history {
+            margin-top: 30px;
+            font-size: 14px;
+            color: #95a5a6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>今天吃什么</h1>
+        
+        <div class="categories">
+            <button class="category-btn active" data-category="all">全部</button>
+            <button class="category-btn" data-category="chinese">中餐</button>
+            <button class="category-btn" data-category="western">西餐</button>
+            <button class="category-btn" data-category="fast">快餐</button>
+            <button class="category-btn" data-category="healthy">健康餐</button>
+        </div>
+        
+        <div class="result">
+            <div>
+                <div class="food-name" id="food-result">?</div>
+                <div class="reason" id="food-reason">点击下方按钮开始选择</div>
+            </div>
+        </div>
+        
+        <button id="choose-btn">随机选择</button>
+        
+        <div class="history">
+            最近选择: <span id="history-list"></span>
+        </div>
+    </div>
+
+    <script src="food-data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
