@@ -259,11 +259,23 @@ const restaurantData = {
       "location": "长泰广场A10座2层03",
       "categories": ["日式","寿司"]
     },
+    {
+      "name": "望蓉城",
+      "vendor": "Not vendor",
+      "location": "长泰广场",
+      "categories": ["中餐","川菜"]
+    },
       {
       "name": "成都你六姐",
       "vendor": "Not vendor",
       "location": "长泰广场",
       "categories": ["中餐","川菜"]
-    }
+    },
+      {
+      "name": "太二酸菜鱼",
+      "vendor": "Not vendor",
+      "location": "长泰广场",
+      "categories": ["中餐","川菜"]
+    }   
   ]
 };
