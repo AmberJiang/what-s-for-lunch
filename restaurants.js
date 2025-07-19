@@ -252,6 +252,18 @@ const restaurantData = {
       "vendor": "SAP Digital Meal Service",
       "location": "长泰广场",
       "categories": ["面包", "甜品"]
+    },
+     {
+      "name": "滨寿司",
+      "vendor": "Not vendor",
+      "location": "长泰广场A10座2层03",
+      "categories": ["日式","寿司"]
+    },
+      {
+      "name": "成都你六姐",
+      "vendor": "Not vendor",
+      "location": "长泰广场",
+      "categories": ["中餐","川菜"]
     }
   ]
 };
