@@ -18,6 +18,21 @@ document.addEventListener('DOMContentLoaded', function() {
             currentFilter = this.dataset.filter;
         });
     });
+
+    const categoryBtns = document.querySelectorAll('.category-btn');
+
+    categoryBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const category = this.dataset.category;
+            if (category === 'all') {
+                filteredRestaurants = restaurants;
+            } else {
+                filteredRestaurants = restaurants.filter(r => 
+                    r.categories.includes(category)
+                );
+            }
+        });
+    });
     
     // 随机选择餐厅
     chooseBtn.addEventListener('click', function() {
@@ -36,6 +51,8 @@ document.addEventListener('DOMContentLoaded', function() {
             } else if (currentFilter.startsWith('location:')) {
                 const locationKeyword = currentFilter.split(':')[1];
                 filteredRestaurants = restaurants.filter(r => r.location.includes(locationKeyword));
+            } else if (currentFilter.startsWith('sap')) {
+                filteredRestaurants = restaurants.filter(r => r.vendor === "SAP");
             }
         }
         
