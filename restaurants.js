@@ -50,7 +50,7 @@ const restaurantData = {
       "categories": ["中餐", "海鲜"]
     },
     {
-      "name": "辣杰冰室",
+      "name": "兢杰冰室",
       "vendor": "SAP Digital Meal Service",
       "location": "汇智广场B1层24室",
       "categories": ["港式", "茶餐厅"]
