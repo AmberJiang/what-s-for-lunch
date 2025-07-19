@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今天吃什么</title>
+    <title>今天吃什么 - SAP餐厅版</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -42,12 +42,12 @@
             justify-content: center;
         }
         
-        .food-name {
+        .restaurant-name {
             color: #e74c3c;
             font-size: 36px;
         }
         
-        .reason {
+        .location {
             font-size: 16px;
             color: #7f8c8d;
             margin-top: 10px;
@@ -71,14 +71,14 @@
             box-shadow: 0 5px 10px rgba(0,0,0,0.2);
         }
         
-        .categories {
+        .filter-buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
             margin: 20px 0;
         }
         
-        .category-btn {
+        .filter-btn {
             background: #ecf0f1;
             color: #2c3e50;
             margin: 5px;
@@ -87,7 +87,7 @@
             font-size: 14px;
         }
         
-        .category-btn.active {
+        .filter-btn.active {
             background: #e74c3c;
             color: white;
         }
@@ -101,20 +101,19 @@
 </head>
 <body>
     <div class="container">
-        <h1>今天吃什么</h1>
+        <h1>SAP餐厅吃什么</h1>
         
-        <div class="categories">
-            <button class="category-btn active" data-category="all">全部</button>
-            <button class="category-btn" data-category="chinese">中餐</button>
-            <button class="category-btn" data-category="western">西餐</button>
-            <button class="category-btn" data-category="fast">快餐</button>
-            <button class="category-btn" data-category="healthy">健康餐</button>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="vendor">SAP合作餐厅</button>
+            <button class="filter-btn" data-filter="location:长泰广场">长泰广场</button>
+            <button class="filter-btn" data-filter="location:汇智">汇智广场</button>
         </div>
         
         <div class="result">
             <div>
-                <div class="food-name" id="food-result">?</div>
-                <div class="reason" id="food-reason">点击下方按钮开始选择</div>
+                <div class="restaurant-name" id="restaurant-result">?</div>
+                <div class="location" id="location-result">点击下方按钮开始选择</div>
             </div>
         </div>
         
@@ -125,7 +124,7 @@
         </div>
     </div>
 
-    <script src="food-data.js"></script>
+    <script src="restaurants.json"></script>
     <script src="script.js"></script>
 </body>
 </html>
