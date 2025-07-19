@@ -1,4 +1,4 @@
-{
+const restaurantData = {
   "restaurants": [
     {
       "name": "宝珠酒酿酸奶",
@@ -191,4 +191,4 @@
       "location": "长泰广场"
     }
   ]
-}
+};
