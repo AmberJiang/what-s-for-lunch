@@ -35,7 +35,7 @@ const restaurantData = {
       "name": "Wagas",
       "vendor": "SAP Digital Meal Service",
       "location": "汇智商业中心1层646",
-      "categories": ["西餐", "轻食"]
+      "categories": ["西餐", "轻食", "饮品"]
     },
     {
       "name": "胡子大厨 汇智店",

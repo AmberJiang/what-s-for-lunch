@@ -97,6 +97,42 @@
             font-size: 14px;
             color: #95a5a6;
         }
+
+        /* 更新按钮样式 */
+        #action-btn {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px;
+            min-width: 120px; /* 固定宽度防止文字变化时按钮大小改变 */
+        }
+
+        #action-btn:hover {
+            background-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        #action-btn.choosing {
+            background-color: #2ecc71; /* 选择中显示绿色 */
+        }
+
+        /* 保持原有的动画效果 */
+        @keyframes scrollEffect {
+            0% { transform: translateY(0); opacity: 0.5; }
+            50% { transform: translateY(-5px); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0.5; }
+        }
+
+        .scrolling {
+            animation: scrollEffect 0.1s infinite;
+            color: #e74c3c;
+        }
     </style>
 </head>
 <body>
@@ -111,14 +147,23 @@
             <button class="filter-btn" data-filter="drinks">饮品&甜品 </button>
         </div>
         
-        <div class="result">
+        <!-- <div class="result">
             <div>
                 <div class="restaurant-name" id="restaurant-result">?</div>
                 <div class="location" id="location-result">点击下方按钮开始选择</div>
             </div>
         </div>
         
-        <button id="choose-btn">随机选择</button>
+        <button id="choose-btn">随机选择</button> -->
+
+        <div class="result">
+    <div>
+        <div class="restaurant-name" id="restaurant-result">?</div>
+        <div class="location" id="location-result">点击下方按钮开始选择</div>
+    </div>
+</div>
+
+<button id="action-btn">开始选择</button>
         
         <div class="history">
             最近选择: <span id="history-list"></span>
