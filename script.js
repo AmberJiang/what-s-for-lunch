@@ -15,8 +15,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function filterRestaurants() {
         if (currentFilter === 'all') {
-            filteredRestaurants = [...restaurants];
-        } else if (currentFilter === 'vendor') {
+
+        // 筛选全部时排除饮品和甜品
+        filteredRestaurants = restaurants.filter(r => 
+            !r.categories.includes("饮品") && 
+            !r.categories.includes("甜品")
+        )        } else if (currentFilter === 'vendor') {
             filteredRestaurants = restaurants.filter(r => r.vendor === "SAP Digital Meal Service");
         } else if (currentFilter.startsWith('location:')) {
             const locationKeyword = currentFilter.split(':')[1];
