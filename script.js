@@ -48,34 +48,50 @@ document.addEventListener('DOMContentLoaded', function() {
         actionBtn.classList.add('choosing');
         restaurantResult.classList.add('scrolling');
         
-        // 快速切换显示不同的餐厅
-        scrollInterval = setInterval(() => {
-            const randomIndex = Math.floor(Math.random() * filteredRestaurants.length);
-            const tempRestaurant = filteredRestaurants[randomIndex];
-            restaurantResult.textContent = tempRestaurant.name;
-            locationResult.textContent = "选择中...";
-        }, 100);
+         // 预定义颜色数组
+    const colors = [
+        '#FF5252', '#FF9800', '#FFEB3B', 
+        '#4CAF50', '#2196F3', '#9C27B0',
+        '#E91E63', '#00BCD4', '#673AB7'
+    ];
+    
+    let counter = 0;
+
+    // 快速切换显示不同的餐厅和颜色
+    scrollInterval = setInterval(() => {
+        const randomIndex = Math.floor(Math.random() * filteredRestaurants.length);
+        const tempRestaurant = filteredRestaurants[randomIndex];
+        restaurantResult.textContent = tempRestaurant.name;
+        locationResult.textContent = "选择中...";
+        
+        // 动态改变颜色
+        restaurantResult.style.color = colors[counter % colors.length];
+        counter++;
+    }, 100); // 调整这个值可以改变滚动速度
     }
 
     // 停止滚动并显示结果
-    function stopChoosing() {
-        clearInterval(scrollInterval);
-        isChoosing = false;
-        actionBtn.textContent = "再选一次";
-        actionBtn.classList.remove('choosing');
-        restaurantResult.classList.remove('scrolling');
-        
-        const randomIndex = Math.floor(Math.random() * filteredRestaurants.length);
-        const selected = filteredRestaurants[randomIndex];
-        
-        restaurantResult.textContent = selected.name;
-        locationResult.textContent = selected.location;
-        
-        // 添加到历史记录
-        history.unshift(selected.name);
-        if (history.length > 5) history.pop();
-        updateHistoryDisplay();
-    }
+function stopChoosing() {
+    clearInterval(scrollInterval);
+    isChoosing = false;
+    actionBtn.textContent = "再选一次";
+    actionBtn.classList.remove('choosing');
+    restaurantResult.classList.remove('scrolling');
+    
+    // 移除内联颜色样式，使用默认样式
+    restaurantResult.style.color = '';
+    
+    const randomIndex = Math.floor(Math.random() * filteredRestaurants.length);
+    const selected = filteredRestaurants[randomIndex];
+    
+    restaurantResult.textContent = selected.name;
+    locationResult.textContent = selected.location;
+    
+    // 添加到历史记录
+    history.unshift(selected.name);
+    if (history.length > 5) history.pop();
+    updateHistoryDisplay();
+}
 
     // 更新历史记录显示
     function updateHistoryDisplay() {
