@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>今天吃什么 - SAP餐厅版</title>
+    <title>今天吃什么</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -144,24 +144,15 @@
 </head>
 <body>
     <div class="container">
-        <h1>SAP中午吃什么</h1>
+        <h1>中午吃什么</h1>
         <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">全部 (不含饮品甜点)</button>
+            <button id="getNearyByBtn" class="filter-btn active" data-filter="nearBy">附近的餐厅</button>
             <button class="filter-btn" data-filter="sap">食堂</button>
             <button class="filter-btn" data-filter="vendor">SAP合作餐厅</button>
             <button class="filter-btn" data-filter="location:长泰广场">长泰广场</button>
             <button class="filter-btn" data-filter="location:汇智">汇智广场</button>
             <button class="filter-btn" data-filter="drinks">饮品&甜品 </button>
         </div>
-        
-        <!-- <div class="result">
-            <div>
-                <div class="restaurant-name" id="restaurant-result">?</div>
-                <div class="location" id="location-result">点击下方按钮开始选择</div>
-            </div>
-        </div>
-        
-        <button id="choose-btn">随机选择</button> -->
 
         <div class="result">
     <div>

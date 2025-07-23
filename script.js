@@ -8,30 +8,87 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentFilter = 'all';
     let history = [];
-    let restaurants = restaurantData.restaurants; // 直接使用JS变量
+    let restaurants = []; //附近的餐厅
+    let SAPrestaurants = restaurantData.restaurants; // SAP 餐厅，hard code 直接使用JS变量
     let scrollInterval;
     let isChoosing = false;
     let filteredRestaurants = [];
+    const API_KEY = "5b7a909260fb6be98abcbfd47dd3f324"; // 替换成你的 Key
+// const testLat = 31.2304;
+// const testLng = 121.4737;
+// getNearbyRestaurants(testLat, testLng);
+        document.getElementById("getNearyByBtn").addEventListener("click", async () => {
+
+    if (!navigator.geolocation) {
+    alert("浏览器不支持地理位置 API");
+    return;
+    }
+     const permission = await navigator.permissions.query({ name: 'geolocation' });
+    if (permission.state === 'denied') {
+        alert("请前往浏览器设置允许定位权限！");
+        return;
+    }
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                        const { latitude, longitude } = position.coords;
+                        console.log("位置:",latitude, longitude);
+                         getNearbyRestaurants(latitude, longitude);
+                    },
+                    (error) => {
+                        alert("获取位置失败：" + error.message);
+                    }
+                );
+            } else {
+                alert("浏览器不支持地理位置 API");
+            }
+        });
+
+   async function getNearbyRestaurants(lat, lng) {
+            const url = `https://restapi.amap.com/v3/place/around?key=${API_KEY}&location=${lng},${lat}&radius=1000&types=050000&offset=20`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if (data.status === "1" && data.pois) {
+                    restaurants = data.pois;
+                    document.getElementById("action-btn").disabled = false;
+                    console.log(`找到 ${restaurants.length} 家餐厅`);
+                } else {
+                    alert("未找到附近餐厅");
+                }
+            } catch (error) {
+                alert("API 请求失败：" + error);
+            }
+        }
 
     function filterRestaurants() {
+        if (currentFilter === 'nearBy') {
+            if (restaurants.length === 0) {
+                alert("请先请前往浏览器设置允许定位权限");
+                return;
+            }   
+            filteredRestaurants = restaurants;
+            return;
+        }
         if (currentFilter === 'all') {
-
         // 筛选全部时排除饮品和甜品
-        filteredRestaurants = restaurants.filter(r => 
+        filteredRestaurants = SAPrestaurants.filter(r => 
             !r.categories.includes("饮品") && 
             !r.categories.includes("甜品")
         )        } else if (currentFilter === 'vendor') {
-            filteredRestaurants = restaurants.filter(r => r.vendor === "SAP Digital Meal Service");
-        } else if (currentFilter.startsWith('location:')) {
-            const locationKeyword = currentFilter.split(':')[1];
-            filteredRestaurants = restaurants.filter(r => r.location.includes(locationKeyword));
+            filteredRestaurants = SAPrestaurants.filter(r => r.vendor === "SAP Digital Meal Service");
+        } else if (currentFilter.startsWith('address:')) {
+            const locationKeyword = SAPrestaurants.split(':')[1];
+            filteredRestaurants = SAPrestaurants.filter(r => r.address.includes(locationKeyword));
         } else if (currentFilter.startsWith('category:')) {
             const category = currentFilter.split(':')[1];
-            filteredRestaurants = restaurants.filter(r => r.categories.includes(category));
+            filteredRestaurants = SAPrestaurants.filter(r => r.categories.includes(category));
         }  else if (currentFilter.startsWith('drinks')) {
-            filteredRestaurants = restaurants.filter(r => r.categories.includes("甜品") || r.categories.includes("饮品"));
+            filteredRestaurants = SAPrestaurants.filter(r => r.categories.includes("甜品") || r.categories.includes("饮品"));
         }  else if (currentFilter.startsWith('sap')) {
-            filteredRestaurants = restaurants.filter(r => r.vendor === "SAP");
+            filteredRestaurants = SAPrestaurants.filter(r => r.vendor === "SAP");
         }
     }
 
@@ -85,7 +142,7 @@ function stopChoosing() {
     const selected = filteredRestaurants[randomIndex];
     
     restaurantResult.textContent = selected.name;
-    locationResult.textContent = selected.location;
+    locationResult.textContent = selected.address;
     
     // 添加到历史记录
     history.unshift(selected.name);
