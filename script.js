@@ -6,10 +6,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const historyList = document.getElementById('history-list');
     const filterBtns = document.querySelectorAll('.filter-btn');
     
-    let currentFilter = 'all';
+    let currentFilter = 'nearBy';
     let history = [];
     let restaurants = []; //附近的餐厅
-    let SAPrestaurants = restaurantData.restaurants; // SAP 餐厅，hard code 直接使用JS变量
+    let SAPrestaurants = [];  // SAP 餐厅，hard code 直接使用JS变量 
     let scrollInterval;
     let isChoosing = false;
     let filteredRestaurants = [];
@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // const testLat = 31.2304;
 // const testLng = 121.4737;
 // getNearbyRestaurants(testLat, testLng);
-        document.getElementById("getNearyByBtn").addEventListener("click", async () => {
+       async function getLocation()  {
 
     if (!navigator.geolocation) {
     alert("浏览器不支持地理位置 API");
@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 alert("浏览器不支持地理位置 API");
             }
-        });
+        }
 
    async function getNearbyRestaurants(lat, lng) {
             const url = `https://restapi.amap.com/v3/place/around?key=${API_KEY}&location=${lng},${lat}&radius=1000&types=050000&offset=20`;
@@ -65,13 +65,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function filterRestaurants() {
         if (currentFilter === 'nearBy') {
+            getLocation();
             if (restaurants.length === 0) {
-                alert("请先请前往浏览器设置允许定位权限");
+                alert("请先允许定位权限");
                 return;
             }   
             filteredRestaurants = restaurants;
             return;
         }
+
+        SAPrestaurants =restaurantData.restaurants;
         if (currentFilter === 'all') {
         // 筛选全部时排除饮品和甜品
         filteredRestaurants = SAPrestaurants.filter(r => 
@@ -179,7 +182,4 @@ function stopChoosing() {
             startChoosing();
         }
     });
-    
-    // 初始筛选
-    filterRestaurants();
 });
