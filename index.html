@@ -406,6 +406,122 @@
                 transform: scale(0.98);
             }
         }
+
+        /* 礼花动画效果 */
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #ff6b6b;
+            animation: confetti-fall 3s linear forwards;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .confetti:nth-child(2n) {
+            background: #4ecdc4;
+        }
+
+        .confetti:nth-child(3n) {
+            background: #45b7d1;
+        }
+
+        .confetti:nth-child(4n) {
+            background: #96ceb4;
+        }
+
+        .confetti:nth-child(5n) {
+            background: #feca57;
+        }
+
+        .confetti:nth-child(6n) {
+            background: #ff9ff3;
+        }
+
+        .confetti:nth-child(7n) {
+            background: #54a0ff;
+        }
+
+        .confetti:nth-child(8n) {
+            background: #5f27cd;
+        }
+
+        .confetti:nth-child(9n) {
+            background: #00d2d3;
+        }
+
+        .confetti:nth-child(10n) {
+            background: #ff9f43;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) translateX(0px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) translateX(var(--sway, 0px)) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* 礼花爆炸效果 */
+        .confetti-explosion {
+            position: fixed;
+            width: 6px;
+            height: 6px;
+            background: #ff6b6b;
+            animation: confetti-explode 2s ease-out forwards;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .confetti-explosion:nth-child(2n) {
+            background: #4ecdc4;
+        }
+
+        .confetti-explosion:nth-child(3n) {
+            background: #45b7d1;
+        }
+
+        .confetti-explosion:nth-child(4n) {
+            background: #96ceb4;
+        }
+
+        .confetti-explosion:nth-child(5n) {
+            background: #feca57;
+        }
+
+        .confetti-explosion:nth-child(6n) {
+            background: #ff9ff3;
+        }
+
+        .confetti-explosion:nth-child(7n) {
+            background: #54a0ff;
+        }
+
+        .confetti-explosion:nth-child(8n) {
+            background: #5f27cd;
+        }
+
+        .confetti-explosion:nth-child(9n) {
+            background: #00d2d3;
+        }
+
+        .confetti-explosion:nth-child(10n) {
+            background: #ff9f43;
+        }
+
+        @keyframes confetti-explode {
+            0% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y)) scale(0);
+                opacity: 0;
+            }
+        }
     </style>
 </head>
 <body>
