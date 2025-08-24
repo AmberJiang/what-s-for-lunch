@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let scrollInterval;
     let isChoosing = false;
     let filteredRestaurants = [];
+    let userLocation = null; // 存储用户位置
     const API_KEY = "5b7a909260fb6be98abcbfd47dd3f324"; 
 
     async function getLocation()  {
@@ -30,7 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
                     (position) => {
                         const { latitude, longitude } = position.coords;
                         console.log("位置:",latitude, longitude);
-                         getNearbyRestaurants(latitude, longitude);
+                        // 保存用户位置
+                        userLocation = { latitude, longitude };
+                        getNearbyRestaurants(latitude, longitude);
                     },
                     (error) => {
                         alert("获取位置失败：" + error.message);
@@ -174,17 +177,31 @@ function stopChoosing() {
 
     restaurantResult.textContent = selected.name;
 
-    // 将地址显示为可点击的按钮
-    locationResult.innerHTML = `
-        <div class="address-button" onclick="showMapOptions('${selected.address}', '${selected.name}')">
+    // 根据筛选条件显示不同的地址信息
+    if (currentFilter === 'nearBy') {
+        // 附近餐厅模式：显示导航按钮
+        // 获取餐厅坐标（如果存在）
+        const destLat = selected.location ? selected.location.split(',')[1] : null;
+        const destLng = selected.location ? selected.location.split(',')[0] : null;
+        
+        locationResult.innerHTML = `
+            <div class="address-button" onclick="showMapOptions('${selected.address}', '${selected.name}', ${destLat}, ${destLng})">
+                <div style="color: #2d3748; font-size: 14px; font-weight: 500;">
+                    ${selected.address}
+                </div>
+                <div style="color: #667eea; font-size: 12px; margin-top: 4px;">
+                    点击选择地图导航
+                </div>
+            </div>
+        `;
+    } else {
+        // 其他模式：只显示地址信息
+        locationResult.innerHTML = `
             <div style="color: #2d3748; font-size: 14px; font-weight: 500;">
                 ${selected.address}
             </div>
-            <div style="color: #667eea; font-size: 12px; margin-top: 4px;">
-                点击选择地图导航
-            </div>
-        </div>
-    `;
+        `;
+    }
 
     // 添加到历史记录
     history.unshift(selected.name);
@@ -193,18 +210,30 @@ function stopChoosing() {
 }
 
     // 生成地图导航链接
-    function generateMapLinks(address, name = '') {
-        // 清理地址中的特殊字符
-        const cleanAddress = address.replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, '');
+    function generateMapLinks(address, name = '', userLat = null, userLng = null, destLat = null, destLng = null) {
+        let amapUrl, baiduUrl, tencentUrl;
 
-        // 高德地图链接
-        const amapUrl = `https://uri.amap.com/navigation?to=${encodeURIComponent(cleanAddress)}&mode=car&policy=1&src=mypage&coordinate=gaode`;
-
-        // 百度地图链接
-        const baiduUrl = `https://map.baidu.com/search/${encodeURIComponent(cleanAddress)}/@116.404,39.915,12z`;
-
-        // 腾讯地图链接
-        const tencentUrl = `https://map.qq.com/m/search?keyword=${encodeURIComponent(cleanAddress)}`;
+        if (userLat && userLng) {
+            // 如果有用户位置，使用导航模式
+            if (destLat && destLng) {
+                // 如果有目的地坐标，使用坐标导航
+                amapUrl = `https://ditu.amap.com/dir?type=car&policy=2&from[name]=我的位置&from[id]=dirmyloc-from&from[adcode]=310000&from[poitype]=&from[lnglat]=${userLng},${userLat}&from[modxy]=${userLng},${userLat}&to[name]=${encodeURIComponent(name || address)}&to[lnglat]=${destLng},${destLat}&to[modxy]=${destLng},${destLat}&to[poitype]=&to[adcode]=&src=mypage&innersrc=uriapi`;
+                baiduUrl = `https://map.baidu.com/poi/@${destLng},${destLat},19z?querytype=detailConInfo&da_src=shareurl`;
+                tencentUrl = `https://apis.map.qq.com/uri/v1/routeplan?type=drive&from=${userLat},${userLng}&to=${destLat},${destLng}&referer=myapp`;
+            } else {
+                // 如果没有目的地坐标，使用地址搜索
+                const cleanAddress = address.replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, '');
+                amapUrl = `https://ditu.amap.com/dir?type=car&policy=2&from[name]=我的位置&from[id]=dirmyloc-from&from[adcode]=310000&from[poitype]=&from[lnglat]=${userLng},${userLat}&from[modxy]=${userLng},${userLat}&to[name]=${encodeURIComponent(cleanAddress)}&to[lnglat]=&to[modxy]=&to[poitype]=&to[adcode]=&src=mypage&innersrc=uriapi`;
+                baiduUrl = `https://map.baidu.com/search/${encodeURIComponent(cleanAddress)}/@116.404,39.915,12z`;
+                tencentUrl = `https://apis.map.qq.com/uri/v1/routeplan?type=drive&from=${userLat},${userLng}&to=${encodeURIComponent(cleanAddress)}&referer=myapp`;
+            }
+        } else {
+            // 如果没有用户位置，使用搜索模式
+            const cleanAddress = address.replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, '');
+            amapUrl = `https://ditu.amap.com/search?query=${encodeURIComponent(cleanAddress)}&type=car&src=mypage`;
+            baiduUrl = `https://map.baidu.com/search/${encodeURIComponent(cleanAddress)}/@116.404,39.915,12z`;
+            tencentUrl = `https://map.qq.com/m/search?keyword=${encodeURIComponent(cleanAddress)}`;
+        }
 
         return {
             amap: amapUrl,
@@ -214,8 +243,16 @@ function stopChoosing() {
     }
 
     // 显示地图选择弹窗
-    window.showMapOptions = function(address, name = '') {
-        const mapLinks = generateMapLinks(address, name);
+    window.showMapOptions = function(address, name = '', destLat = null, destLng = null) {
+        // 传递用户位置信息和目的地坐标给地图链接生成函数
+        const mapLinks = generateMapLinks(
+            address, 
+            name, 
+            userLocation ? userLocation.latitude : null,
+            userLocation ? userLocation.longitude : null,
+            destLat,
+            destLng
+        );
         
         // 检测是否为移动设备
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -246,21 +283,14 @@ function stopChoosing() {
                     <div class="map-option" data-url="${mapLinks.amap}">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: #2d3748; font-size: 16px;">高德地图</div>
-                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">导航到目的地</div>
+                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">${userLocation ? '从当前位置导航' : '搜索目的地'}</div>
                         </div>
                     </div>
                     
                     <div class="map-option" data-url="${mapLinks.baidu}">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: #2d3748; font-size: 16px;">百度地图</div>
-                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">搜索并导航</div>
-                        </div>
-                    </div>
-                    
-                    <div class="map-option" data-url="${mapLinks.tencent}">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; color: #2d3748; font-size: 16px;">腾讯地图</div>
-                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">移动端优化</div>
+                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">${userLocation ? '从当前位置导航' : '搜索目的地'}</div>
                         </div>
                     </div>
                 </div>
@@ -372,7 +402,6 @@ function stopChoosing() {
             <div style="display: flex; flex-direction: column; gap: 12px;">
                 <button class="map-btn" data-url="${mapLinks.amap}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">高德地图</button>
                 <button class="map-btn" data-url="${mapLinks.baidu}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">百度地图</button>
-                <button class="map-btn" data-url="${mapLinks.tencent}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">腾讯地图</button>
             </div>
             <button class="cancel-btn" style="background: #f7fafc; color: #718096; border: 1px solid #e2e8f0; padding: 12px 24px; border-radius: 12px; cursor: pointer; margin-top: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">取消</button>
         `;

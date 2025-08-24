@@ -4,25 +4,25 @@ const restaurantData = {
     {
       "name": "独当一面",
       "vendor": "SAP",
-      "address": "SAP L1",
+      "address": "上海市浦东新区晨晖路1000号",
       "categories": ["中餐","家常菜"]
     },
       {
       "name": "中餐",
       "vendor": "SAP",
-      "address": "SAP L1",
+      "address": "上海市浦东新区晨晖路1000号",
       "categories": ["中餐","家常菜"]
     },
       {
       "name": "煲煲好",
       "vendor": "SAP",
-      "address": "SAP L1",
+      "address": "上海市浦东新区晨晖路1000号",
       "categories": ["中餐","家常菜"]
     },
       {
       "name": "西餐",
       "vendor": "SAP",
-      "address": "SAP L1",
+      "address": "上海市浦东新区晨晖路1000号",
       "categories": ["西餐"]
     },
     {
