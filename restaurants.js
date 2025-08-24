@@ -104,12 +104,6 @@ const restaurantData = {
       "categories": ["面食", "中餐"]
     },
     {
-      "name": "园区第六餐厅",
-      "vendor": "SAP Digital Meal Service",
-      "address": "亮秀路112号Y1座",
-      "categories": ["食堂", "中餐"]
-    },
-    {
       "name": "赛百味(浦东)",
       "vendor": "SAP Digital Meal Service",
       "address": "晨晖路1000号1楼117-B",
@@ -120,12 +114,6 @@ const restaurantData = {
       "vendor": "SAP Digital Meal Service",
       "address": "晨晖路1001号",
       "categories": ["咖啡", "饮品"]
-    },
-    {
-      "name": "园区第五餐厅",
-      "vendor": "SAP Digital Meal Service",
-      "address": "晨晖路1000号",
-      "categories": ["食堂", "中餐"]
     },
     {
       "name": "果之满满",
