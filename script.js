@@ -13,11 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let scrollInterval;
     let isChoosing = false;
     let filteredRestaurants = [];
-    const API_KEY = "5b7a909260fb6be98abcbfd47dd3f324"; // 替换成你的 Key
-// const testLat = 31.2304;
-// const testLng = 121.4737;
-// getNearbyRestaurants(testLat, testLng);
-       async function getLocation()  {
+    const API_KEY = "5b7a909260fb6be98abcbfd47dd3f324"; 
+
+    async function getLocation()  {
 
     if (!navigator.geolocation) {
     alert("浏览器不支持地理位置 API");
@@ -49,12 +47,36 @@ document.addEventListener('DOMContentLoaded', function() {
             
             try {
                 const response = await fetch(url);
-                const data = await response.json();
+                const data = await response.json();          
                 
-                if (data.status === "1" && data.pois) {
+                if (data.status === "1" && data.pois) {                  
                     restaurants = data.pois;
                     document.getElementById("action-btn").disabled = false;
-                    console.log(`找到 ${restaurants.length} 家餐厅`);
+                    
+                    // 示例筛选逻辑
+                    const lunchRestaurants = data.pois.filter(poi => {
+                        const name = poi.name.toLowerCase();
+                        const type = poi.type || '';
+                        
+                        // 排除咖啡店、奶茶店等
+                        const excludeKeywords = ['咖啡', '奶茶', '甜品', '蛋糕', '面包', '饮品', '酒吧'];
+                        const hasExcludeKeyword = excludeKeywords.some(keyword => 
+                            name.includes(keyword) || type.includes(keyword)
+                        );
+                        
+                        // 包含午餐相关关键词
+                        const includeKeywords = ['餐厅', '饭店', '快餐', '火锅', '烧烤', '面馆', '粥店'];
+                        const hasIncludeKeyword = includeKeywords.some(keyword => 
+                            type.includes(keyword)
+                        );
+                        
+                        return !hasExcludeKeyword && hasIncludeKeyword;
+                    });
+                    
+                    lunchRestaurants.forEach((restaurant, index) => {
+                        console.log(`午餐餐厅 ${index + 1}: ${restaurant.name} (${restaurant.type})`);
+                    });
+                    
                 } else {
                     alert("未找到附近餐厅");
                 }
@@ -70,7 +92,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert("请先允许定位权限");
                 return;
             }   
-            filteredRestaurants = restaurants;
+            
+            // 对附近餐厅进行筛选，排除非午饭选项
+            filteredRestaurants = restaurants.filter(poi => {
+                const name = poi.name.toLowerCase();
+                const type = poi.type || '';
+                
+                // 排除咖啡店、奶茶店等非午饭选项
+                const excludeKeywords = ['咖啡', '奶茶', '甜品', '蛋糕', '面包', '饮品', '酒吧', '夜宵', 'cafe', 'coffee', 'tea'];
+                const hasExcludeKeyword = excludeKeywords.some(keyword => 
+                    name.includes(keyword) || type.includes(keyword)
+                );
+                
+                // 包含午餐相关关键词
+                const includeKeywords = ['餐厅', '饭店', '食堂', '快餐', '火锅', '烧烤', '面馆', '粥店', 'restaurant', 'food'];
+                const hasIncludeKeyword = includeKeywords.some(keyword => 
+                    name.includes(keyword) || type.includes(keyword)
+                );
+                
+                // 如果名称中没有明确的排除关键词，且包含午餐关键词，则保留
+                return !hasExcludeKeyword && hasIncludeKeyword;
+            });
+            
+            console.log(`筛选后剩余 ${filteredRestaurants.length} 家午餐餐厅`);
             return;
         }
 
