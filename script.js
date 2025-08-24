@@ -1,5 +1,20 @@
 // script.js - 主逻辑（使用restaurantData变量）
 
+// 防止双击缩放
+let lastTouchEnd = 0;
+document.addEventListener('touchend', function (event) {
+    const now = (new Date()).getTime();
+    if (now - lastTouchEnd <= 300) {
+        event.preventDefault();
+    }
+    lastTouchEnd = now;
+}, false);
+
+// 防止双击缩放
+document.addEventListener('dblclick', function(event) {
+    event.preventDefault();
+}, false);
+
 // 礼花动画函数
 function createConfetti(x, y, count = 50) {
     for (let i = 0; i < count; i++) {
