@@ -129,9 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
          // 预定义颜色数组
     const colors = [
-        '#FF5252', '#FF9800', '#FFEB3B', 
-        '#4CAF50', '#2196F3', '#9C27B0',
-        '#E91E63', '#00BCD4', '#673AB7'
+        '#ff6b6b', '#4ecdc4', '#45b7d1', 
+        '#96ceb4', '#feca57', '#ff9ff3',
+        '#54a0ff', '#5f27cd', '#00d2d3'
     ];
     
     let counter = 0;
@@ -144,10 +144,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // 显示地址和导航提示
         locationResult.innerHTML = `
-            <div style="color: #333; font-size: 14px; margin-bottom: 8px;">
-                📍 ${tempRestaurant.address}
+            <div style="color: #2d3748; font-size: 14px; margin-bottom: 8px; font-weight: 500;">
+                ${tempRestaurant.address}
             </div>
-            <div style="font-size: 12px; color: #666;">
+            <div style="font-size: 12px; color: #718096;">
                 选择完成后点击地址进行导航
             </div>
         `;
@@ -176,28 +176,15 @@ function stopChoosing() {
 
     // 将地址显示为可点击的按钮
     locationResult.innerHTML = `
-        <div class="address-button" style="cursor: pointer; padding: 10px; border: 2px solid #007cc0; border-radius: 8px; background: #f8f9fa; transition: all 0.3s;" onclick="showMapOptions('${selected.address}', '${selected.name}')">
-            <div style="color: #333; font-size: 14px; font-weight: 500;">
-                📍 ${selected.address}
+        <div class="address-button" onclick="showMapOptions('${selected.address}', '${selected.name}')">
+            <div style="color: #2d3748; font-size: 14px; font-weight: 500;">
+                ${selected.address}
             </div>
-            <div style="color: #007cc0; font-size: 12px; margin-top: 4px;">
+            <div style="color: #667eea; font-size: 12px; margin-top: 4px;">
                 点击选择地图导航
             </div>
         </div>
     `;
-
-    // 添加悬停效果
-    const addressButton = locationResult.querySelector('.address-button');
-    addressButton.addEventListener('mouseenter', function() {
-        this.style.background = '#e3f2fd';
-        this.style.borderColor = '#009DE0';
-        this.style.transform = 'translateY(-2px)';
-    });
-    addressButton.addEventListener('mouseleave', function() {
-        this.style.background = '#f8f9fa';
-        this.style.borderColor = '#007cc0';
-        this.style.transform = 'translateY(0)';
-    });
 
     // 添加到历史记录
     history.unshift(selected.name);
@@ -234,66 +221,51 @@ function stopChoosing() {
         const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
         
         if (isMobile) {
-            // 移动端：使用原生选择器样式
-            showMobileMapSelector(address, mapLinks);
+            // 移动端：使用新的现代化选择器样式
+            showModernMapSelector(address, mapLinks);
         } else {
-            // 桌面端：使用原有弹窗
-            showDesktopMapModal(address, mapLinks);
+            // 桌面端：使用现代化弹窗
+            showModernMapModal(address, mapLinks);
         }
     }
 
-    // 移动端地图选择器
-    function showMobileMapSelector(address, mapLinks) {
+    // 现代化地图选择器
+    function showModernMapSelector(address, mapLinks) {
         // 创建底部弹出的选择器
         const selector = document.createElement('div');
-        selector.style.cssText = `
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background: white;
-            border-radius: 15px 15px 0 0;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            z-index: 1000;
-            transform: translateY(100%);
-            transition: transform 0.3s ease-out;
-        `;
-
+        selector.className = 'map-selector';
         selector.innerHTML = `
-            <div style="padding: 20px;">
-                <div style="text-align: center; margin-bottom: 20px;">
-                    <div style="width: 40px; height: 4px; background: #ddd; border-radius: 2px; margin: 0 auto 15px;"></div>
-                    <h3 style="margin: 0 0 10px 0; color: #333; font-size: 18px;">选择地图导航</h3>
-                    <div style="color: #666; font-size: 14px;">${address}</div>
+            <div style="padding: 30px 20px 40px;">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="width: 40px; height: 4px; background: #e2e8f0; border-radius: 2px; margin: 0 auto 20px;"></div>
+                    <h3 style="margin: 0 0 10px 0; color: #2d3748; font-size: 20px; font-weight: 600;">选择地图导航</h3>
+                    <div style="color: #718096; font-size: 14px; line-height: 1.5;">${address}</div>
                 </div>
                 
-                <div style="display: flex; flex-direction: column; gap: 8px;">
-                    <button onclick="openMap('${mapLinks.amap}')" style="display: flex; align-items: center; padding: 15px; background: white; border: 1px solid #e0e0e0; border-radius: 12px; cursor: pointer; font-size: 16px; text-align: left;">
-                        <span style="color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">🗺️</span>
-                        <div>
-                            <div style="font-weight: 500; color: #333;">高德地图</div>
-                            <div style="font-size: 12px; color: #666;">导航到目的地</div>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="map-option" onclick="openMap('${mapLinks.amap}')">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #2d3748; font-size: 16px;">高德地图</div>
+                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">导航到目的地</div>
                         </div>
-                    </button>
+                    </div>
                     
-                    <button onclick="openMap('${mapLinks.baidu}')" style="display: flex; align-items: center; padding: 15px; background: white; border: 1px solid #e0e0e0; border-radius: 12px; cursor: pointer; font-size: 16px; text-align: left;">
-                        <span style=" color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">🗺️</span>
-                        <div>
-                            <div style="font-weight: 500; color: #333;">百度地图</div>
-                            <div style="font-size: 12px; color: #666;">搜索并导航</div>
+                    <div class="map-option" onclick="openMap('${mapLinks.baidu}')">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #2d3748; font-size: 16px;">百度地图</div>
+                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">搜索并导航</div>
                         </div>
-                    </button>
+                    </div>
                     
-                    <button onclick="openMap('${mapLinks.tencent}')" style="display: flex; align-items: center; padding: 15px; background: white; border: 1px solid #e0e0e0; border-radius: 12px; cursor: pointer; font-size: 16px; text-align: left;">
-                        <span style=" color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">🗺️</span>
-                        <div>
-                            <div style="font-weight: 500; color: #333;">腾讯地图</div>
-                            <div style="font-size: 12px; color: #666;">移动端优化</div>
+                    <div class="map-option" onclick="openMap('${mapLinks.tencent}')">
+                        <div style="flex: 1;">
+                            <div style="font-weight: 600; color: #2d3748; font-size: 16px;">腾讯地图</div>
+                            <div style="font-size: 13px; color: #718096; margin-top: 2px;">移动端优化</div>
                         </div>
-                    </button>
+                    </div>
                 </div>
                 
-                <button onclick="closeMapSelector()" style="width: 100%; padding: 15px; margin-top: 15px; background: #f5f5f5; border: none; border-radius: 12px; color: #666; font-size: 16px; cursor: pointer;">取消</button>
+                <button onclick="closeMapSelector()" style="width: 100%; padding: 16px; margin-top: 20px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; color: #718096; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">取消</button>
             </div>
         `;
 
@@ -309,6 +281,7 @@ function stopChoosing() {
             z-index: 999;
             opacity: 0;
             transition: opacity 0.3s ease-out;
+            backdrop-filter: blur(5px);
         `;
 
         document.body.appendChild(overlay);
@@ -317,7 +290,7 @@ function stopChoosing() {
         // 动画显示
         setTimeout(() => {
             overlay.style.opacity = '1';
-            selector.style.transform = 'translateY(0)';
+            selector.classList.add('show');
         }, 10);
 
         // 点击背景关闭
@@ -326,7 +299,7 @@ function stopChoosing() {
         // 全局函数
         window.closeMapSelector = function() {
             overlay.style.opacity = '0';
-            selector.style.transform = 'translateY(100%)';
+            selector.classList.remove('show');
             setTimeout(() => {
                 overlay.remove();
                 selector.remove();
@@ -339,8 +312,8 @@ function stopChoosing() {
         };
     }
 
-    // 桌面端地图弹窗
-    function showDesktopMapModal(address, mapLinks) {
+    // 现代化桌面端地图弹窗
+    function showModernMapModal(address, mapLinks) {
         // 创建弹窗
         const modal = document.createElement('div');
         modal.style.cssText = `
@@ -354,27 +327,31 @@ function stopChoosing() {
             justify-content: center;
             align-items: center;
             z-index: 1000;
+            backdrop-filter: blur(5px);
         `;
 
         const modalContent = document.createElement('div');
         modalContent.style.cssText = `
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            padding: 30px;
+            border-radius: 20px;
             text-align: center;
-            max-width: 300px;
+            max-width: 400px;
             width: 90%;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         `;
 
         modalContent.innerHTML = `
-            <h3 style="margin: 0 0 15px 0; color: #333;">选择地图导航</h3>
-            <div style="margin-bottom: 15px; color: #666; font-size: 14px; width: 220px; height: 32px; line-height: 32px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-left: auto; margin-right: auto;">${address}</div>
-            <div style="display: flex; flex-direction: column; gap: 10px;">
-                <button onclick="window.open('${mapLinks.amap}', '_blank')" style="color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 16px;">🗺️ 高德地图</button>
-                <button onclick="window.open('${mapLinks.baidu}', '_blank')" style=" color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 16px;">🗺️ 百度地图</button>
-                <button onclick="window.open('${mapLinks.tencent}', '_blank')" style=" color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-size: 16px;">🗺️ 腾讯地图</button>
+            <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 600;">选择地图导航</h3>
+            <div style="margin-bottom: 25px; color: #718096; font-size: 14px; line-height: 1.5; padding: 0 20px;">${address}</div>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+                <button onclick="window.open('${mapLinks.amap}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">高德地图</button>
+                <button onclick="window.open('${mapLinks.baidu}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">百度地图</button>
+                <button onclick="window.open('${mapLinks.tencent}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">腾讯地图</button>
             </div>
-            <button onclick="this.closest('.map-modal').remove()" style="background: #ccc; color: #333; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; margin-top: 15px; font-size: 14px;">取消</button>
+            <button onclick="this.closest('.map-modal').remove()" style="background: #f7fafc; color: #718096; border: 1px solid #e2e8f0; padding: 12px 24px; border-radius: 12px; cursor: pointer; margin-top: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">取消</button>
         `;
 
         modal.className = 'map-modal';
@@ -394,7 +371,7 @@ function stopChoosing() {
         const historyList = document.getElementById('history-list');
         if (historyList) {
             historyList.innerHTML = history.map(name =>
-                `<span style="margin: 0 5px;">${name}</span>`
+                `<span>${name}</span>`
             ).join('');
         }
     }

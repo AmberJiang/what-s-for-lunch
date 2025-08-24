@@ -4,172 +4,406 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>今天吃什么</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            background-color: #f8f8f8;
-            margin: 0;
             padding: 20px;
+            position: relative;
+            overflow-x: hidden;
         }
-        
+
+        /* 背景动画效果 */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            animation: backgroundShift 20s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(-10px, -10px) rotate(1deg); }
+            66% { transform: translate(10px, 10px) rotate(-1deg); }
+        }
+
         .container {
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            padding: 30px;
-            width: 90%;
-            max-width: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.1),
+                0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 40px;
+            width: 100%;
+            max-width: 600px;
             text-align: center;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s ease;
         }
-        
+
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.15),
+                0 0 0 1px rgba(255, 255, 255, 0.3);
+        }
+
         h1 {
-            color: #007cc0;
-            margin-bottom: 30px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
         }
-        
-        button {
-            background-color: #007cc0;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 18px;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px;
-        }
-        
-        button:hover {
-            background-color: #eaedf1;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
-        }
-        
+
         .filter-buttons {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            margin: 20px 0;
+            gap: 12px;
+            margin: 30px 0;
         }
-        
+
         .filter-btn {
-            background: #ecf0f1;
-            color: #2c3e50;
-            margin: 5px;
-            padding: 8px 15px;
-            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 2px solid rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 12px 20px;
+            border-radius: 16px;
             font-size: 14px;
-        }
-        
-        .filter-btn.active {
-            background: #007cc0;
-            color: white;
-        }
-        
-        .history {
-            margin-top: 30px;
-            font-size: 14px;
-            color: #95a5a6;
-        }
-
-        /* 更新按钮样式 */
-        #action-btn {
-            background-color: #007cc0;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            font-size: 18px;
-            border-radius: 50px;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s;
-            margin: 10px;
-            min-width: 120px; /* 固定宽度防止文字变化时按钮大小改变 */
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
         }
 
-        #action-btn:hover {
-            background-color: #009DE0;
-            transform: translateY(-3px);
-            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+        .filter-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s;
         }
 
-        #action-btn.choosing {
-            background-color: #009DE0; /* 选择中显示绿色 */
+        .filter-btn:hover::before {
+            left: 100%;
         }
 
-        /* 保持原有的动画效果 */
-        /* 移除原有的scrollEffect动画，替换为彩色效果 */
-        @keyframes colorChange {
-            0% { color: #FF5252; }
-            20% { color: #FF9800; }
-            40% { color: #FFEB3B; }
-            60% { color: #4CAF50; }
-            80% { color: #2196F3; }
-            100% { color: #9C27B0; }
+        .filter-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
         }
 
-        .scrolling {
-            animation: colorChange 0.5s infinite alternate;
-            font-weight: bold;
+        .filter-btn.active {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
         }
 
-        /* 结果区域增强 */
         .result {
-            min-height: 140px;
+            min-height: 160px;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            transition: all 0.3s;
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
         }
 
-   .restaurant-name {
-    color: #1e40af;
-    font-size: 28px;
-    font-weight: 600;
-    text-align: center;
-}
+        .result:hover {
+            background: rgba(255, 255, 255, 0.7);
+            transform: translateY(-2px);
+        }
 
-.location {
-    color: #6b7280;
-    font-size: 16px;
-    margin-top: 8px;
-    text-align: center;
-}
+        .restaurant-name {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #2d3748;
+            text-align: center;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .location {
+            color: #718096;
+            font-size: 16px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        #action-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 160px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        #action-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        #action-btn:hover::before {
+            left: 100%;
+        }
+
+        #action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        #action-btn:active {
+            transform: translateY(-1px);
+        }
+
+        #action-btn.choosing {
+            background: linear-gradient(135deg, #48bb78, #38a169);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .history {
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .history-title {
+            font-size: 14px;
+            color: #718096;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        #history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        #history-list span {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            border: 1px solid rgba(102, 126, 234, 0.2);
+        }
+
+        /* 滚动动画效果 */
+        @keyframes colorChange {
+            0% { color: #ff6b6b; }
+            16.66% { color: #4ecdc4; }
+            33.33% { color: #45b7d1; }
+            50% { color: #96ceb4; }
+            66.66% { color: #feca57; }
+            83.33% { color: #ff9ff3; }
+            100% { color: #54a0ff; }
+        }
+
+        .scrolling {
+            animation: colorChange 0.8s infinite alternate;
+            font-weight: 700;
+        }
+
+        /* 地址按钮样式 */
+        .address-button {
+            cursor: pointer;
+            padding: 16px 20px;
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            border-radius: 16px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            margin-top: 10px;
+        }
+
+        .address-button:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .filter-buttons {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                padding: 10px 16px;
+                font-size: 13px;
+            }
+
+            .restaurant-name {
+                font-size: 1.5rem;
+            }
+
+            #action-btn {
+                padding: 16px 32px;
+                font-size: 16px;
+            }
+        }
+
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 地图选择器样式 */
+        .map-selector {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .map-selector.show {
+            transform: translateY(0);
+        }
+
+        .map-option {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            background: white;
+            border: 1px solid rgba(102, 126, 234, 0.1);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 8px 20px;
+        }
+
+        .map-option:hover {
+            background: rgba(102, 126, 234, 0.05);
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .map-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>中午吃什么</h1>
+        <h1>今天吃什么</h1>
+        
         <div class="filter-buttons">
-    
-            <!-- <button id="getNearyByBtn">
-                <span id="btnText">允许获取位置</span>
-                <span id="btnIcon">📍</span>
-            </button> -->
             <button class="filter-btn active" data-filter="nearBy">附近的餐厅</button>
             <button class="filter-btn" data-filter="sap">食堂</button>
             <button class="filter-btn" data-filter="vendor">SAP合作餐厅</button>
             <button class="filter-btn" data-filter="location:长泰广场">长泰广场</button>
             <button class="filter-btn" data-filter="location:汇智">汇智广场</button>
-            <button class="filter-btn" data-filter="drinks">饮品&甜品 </button>
+            <button class="filter-btn" data-filter="drinks">饮品&甜品</button>
         </div>
 
         <div class="result">
-    <div>
-        <div class="restaurant-name" id="restaurant-result">?</div>
-        <div class="location" id="location-result">点击下方按钮开始选择</div>
-    </div>
-</div>
+            <div class="restaurant-name" id="restaurant-result">?</div>
+            <div class="location" id="location-result">点击下方按钮开始选择</div>
+        </div>
 
-<button id="action-btn">开始选择</button>
+        <button id="action-btn">开始选择</button>
         
         <div class="history">
-            最近选择: <span id="history-list"></span>
+            <div class="history-title">最近选择</div>
+            <div id="history-list"></div>
         </div>
     </div>
 
