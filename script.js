@@ -1,112 +1,4 @@
 // script.js - 主逻辑（使用restaurantData变量）
-
-// 防止双击缩放
-let lastTouchEnd = 0;
-document.addEventListener('touchend', function (event) {
-    const now = (new Date()).getTime();
-    if (now - lastTouchEnd <= 300) {
-        event.preventDefault();
-    }
-    lastTouchEnd = now;
-}, false);
-
-// 防止双击缩放
-document.addEventListener('dblclick', function(event) {
-    event.preventDefault();
-}, false);
-
-// 礼花动画函数
-function createConfetti(x, y, count = 50) {
-    for (let i = 0; i < count; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = x + 'px';
-        confetti.style.top = y + 'px';
-        confetti.style.animationDelay = Math.random() * 0.5 + 's';
-        confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
-        
-        // 添加随机摇摆效果
-        const sway = (Math.random() - 0.5) * 200; // -100px 到 100px 的随机摇摆
-        confetti.style.setProperty('--sway', sway + 'px');
-        
-        document.body.appendChild(confetti);
-        
-        // 动画结束后移除元素
-        setTimeout(() => {
-            if (confetti.parentNode) {
-                confetti.parentNode.removeChild(confetti);
-            }
-        }, 5000);
-    }
-}
-
-function createConfettiExplosion(x, y, count = 30) {
-    for (let i = 0; i < count; i++) {
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti-explosion';
-        confetti.style.left = x + 'px';
-        confetti.style.top = y + 'px';
-        
-        // 随机方向
-        const angle = (Math.PI * 2 * i) / count;
-        const velocity = 100 + Math.random() * 100;
-        const xOffset = Math.cos(angle) * velocity;
-        const yOffset = Math.sin(angle) * velocity;
-        
-        confetti.style.setProperty('--x', xOffset + 'px');
-        confetti.style.setProperty('--y', yOffset + 'px');
-        
-        document.body.appendChild(confetti);
-        
-        // 动画结束后移除元素
-        setTimeout(() => {
-            if (confetti.parentNode) {
-                confetti.parentNode.removeChild(confetti);
-            }
-        }, 3000);
-    }
-}
-
-function triggerConfetti() {
-    // 从屏幕顶部随机位置掉落礼花
-    const screenWidth = window.innerWidth;
-    const screenHeight = window.innerHeight;
-    
-    // 创建多个礼花源，遍布整个屏幕宽度
-    for (let i = 0; i < 8; i++) {
-        const x = Math.random() * screenWidth;
-        const y = -50; // 从屏幕顶部上方开始
-        createConfetti(x, y, 15);
-    }
-    
-    // 在屏幕多个位置创建爆炸效果
-    setTimeout(() => {
-        // 中央爆炸
-        createConfettiExplosion(screenWidth / 2, screenHeight / 2, 30);
-        
-        // 左上角爆炸
-        createConfettiExplosion(screenWidth * 0.2, screenHeight * 0.3, 20);
-        
-        // 右上角爆炸
-        createConfettiExplosion(screenWidth * 0.8, screenHeight * 0.3, 20);
-        
-        // 左下角爆炸
-        createConfettiExplosion(screenWidth * 0.2, screenHeight * 0.7, 20);
-        
-        // 右下角爆炸
-        createConfettiExplosion(screenWidth * 0.8, screenHeight * 0.7, 20);
-    }, 300);
-    
-    // 延迟创建更多礼花，增加覆盖范围
-    setTimeout(() => {
-        for (let i = 0; i < 6; i++) {
-            const x = Math.random() * screenWidth;
-            const y = -50;
-            createConfetti(x, y, 12);
-        }
-    }, 800);
-}
-
 document.addEventListener('DOMContentLoaded', function() {
     const actionBtn = document.getElementById('action-btn');
     const restaurantResult = document.getElementById('restaurant-result');
@@ -163,6 +55,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     restaurants = data.pois;
                     document.getElementById("action-btn").disabled = false;
                     console.log(`找到 ${restaurants.length} 家餐厅`);
+                    // 调试：查看第一个餐厅的数据结构
+                    if (restaurants.length > 0) {
+                        console.log('第一个餐厅的数据:', restaurants[0]);
+                    }
                 } else {
                     alert("未找到附近餐厅");
                 }
@@ -285,8 +181,32 @@ function stopChoosing() {
 
     restaurantResult.textContent = selected.name;
     
-    // 触发礼花动画
-    triggerConfetti();
+    // 获取餐厅类型（处理不同的数据结构）
+    let restaurantType = null;
+    
+    // 检查是否有type字段（高德地图API）
+    if (selected.type) {
+        restaurantType = selected.type;
+    }
+    // 检查是否有categories数组（SAP餐厅数据）
+    else if (selected.categories && selected.categories.length > 0) {
+        restaurantType = selected.categories[0]; // 使用第一个分类
+    }
+
+    // 触发礼花动画，传递餐厅类型
+    triggerConfetti(restaurantType);
+    
+    // 根据餐厅类型显示特定emoji
+    if (restaurantType) {
+        // 延迟1.5秒后显示类型特定emoji，在普通emoji之后
+        setTimeout(() => {
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            
+            // 在屏幕中央显示类型特定emoji
+            createTypeSpecificEmoji(screenWidth / 2, screenHeight / 2, restaurantType, 8); // 从15减少到8
+        }, 1500);
+    }
 
     // 根据筛选条件显示不同的地址信息
     if (currentFilter === 'nearBy') {

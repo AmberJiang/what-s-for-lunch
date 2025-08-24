@@ -467,6 +467,18 @@
             background: #ff9f43;
         }
 
+        /* Emoji礼花样式 */
+        .emoji-confetti {
+            background: transparent !important;
+            width: auto !important;
+            height: auto !important;
+            font-size: 80px; /* 默认大小增加到100px（原来的5倍） */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: confetti-fall 3s linear forwards;
+            /* 确保初始位置在屏幕上方 */
+            transform: translateY(-100vh);
+        }
+
         @keyframes confetti-fall {
             0% {
                 transform: translateY(-100vh) translateX(0px) rotate(0deg);
@@ -564,6 +576,7 @@
     </div>
 
     <script src="restaurants.js"></script>
+    <script src="confetti.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
