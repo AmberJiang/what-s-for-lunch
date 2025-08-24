@@ -343,6 +343,7 @@
             z-index: 1000;
             transform: translateY(100%);
             transition: transform 0.3s ease-out;
+            -webkit-overflow-scrolling: touch;
         }
 
         .map-selector.show {
@@ -359,12 +360,21 @@
             cursor: pointer;
             transition: all 0.3s ease;
             margin: 8px 20px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        .map-option:hover {
+        .map-option:hover,
+        .map-option:active {
             background: rgba(102, 126, 234, 0.05);
             border-color: #667eea;
             transform: translateY(-2px);
+        }
+
+        .map-option:active {
+            transform: translateY(0);
+            background: rgba(102, 126, 234, 0.1);
         }
 
         .map-icon {
@@ -378,6 +388,23 @@
             font-size: 20px;
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
+        }
+
+        /* 移动端优化 */
+        @media (max-width: 768px) {
+            .map-selector {
+                border-radius: 16px 16px 0 0;
+            }
+            
+            .map-option {
+                padding: 18px 20px;
+                margin: 6px 16px;
+                font-size: 16px;
+            }
+            
+            .map-option:active {
+                transform: scale(0.98);
+            }
         }
     </style>
 </head>

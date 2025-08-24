@@ -243,21 +243,21 @@ function stopChoosing() {
                 </div>
                 
                 <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <div class="map-option" onclick="openMap('${mapLinks.amap}')">
+                    <div class="map-option" data-url="${mapLinks.amap}">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: #2d3748; font-size: 16px;">高德地图</div>
                             <div style="font-size: 13px; color: #718096; margin-top: 2px;">导航到目的地</div>
                         </div>
                     </div>
                     
-                    <div class="map-option" onclick="openMap('${mapLinks.baidu}')">
+                    <div class="map-option" data-url="${mapLinks.baidu}">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: #2d3748; font-size: 16px;">百度地图</div>
                             <div style="font-size: 13px; color: #718096; margin-top: 2px;">搜索并导航</div>
                         </div>
                     </div>
                     
-                    <div class="map-option" onclick="openMap('${mapLinks.tencent}')">
+                    <div class="map-option" data-url="${mapLinks.tencent}">
                         <div style="flex: 1;">
                             <div style="font-weight: 600; color: #2d3748; font-size: 16px;">腾讯地图</div>
                             <div style="font-size: 13px; color: #718096; margin-top: 2px;">移动端优化</div>
@@ -265,7 +265,7 @@ function stopChoosing() {
                     </div>
                 </div>
                 
-                <button onclick="closeMapSelector()" style="width: 100%; padding: 16px; margin-top: 20px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; color: #718096; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">取消</button>
+                <button class="cancel-btn" style="width: 100%; padding: 16px; margin-top: 20px; background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 12px; color: #718096; font-size: 16px; font-weight: 500; cursor: pointer; transition: all 0.3s ease;">取消</button>
             </div>
         `;
 
@@ -293,23 +293,46 @@ function stopChoosing() {
             selector.classList.add('show');
         }, 10);
 
-        // 点击背景关闭
-        overlay.addEventListener('click', closeMapSelector);
-        
-        // 全局函数
-        window.closeMapSelector = function() {
+        // 关闭函数
+        function closeMapSelector() {
             overlay.style.opacity = '0';
             selector.classList.remove('show');
             setTimeout(() => {
                 overlay.remove();
                 selector.remove();
             }, 300);
-        };
+        }
 
-        window.openMap = function(url) {
+        // 打开地图函数
+        function openMap(url) {
             window.open(url, '_blank');
             closeMapSelector();
-        };
+        }
+
+        // 事件监听器
+        overlay.addEventListener('click', closeMapSelector);
+        
+        // 地图选项点击事件
+        const mapOptions = selector.querySelectorAll('.map-option');
+        mapOptions.forEach(option => {
+            option.addEventListener('click', function(e) {
+                e.stopPropagation(); // 阻止事件冒泡
+                const url = this.getAttribute('data-url');
+                openMap(url);
+            });
+        });
+
+        // 取消按钮点击事件
+        const cancelBtn = selector.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click', function(e) {
+            e.stopPropagation(); // 阻止事件冒泡
+            closeMapSelector();
+        });
+
+        // 阻止选择器内部点击事件冒泡
+        selector.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
     }
 
     // 现代化桌面端地图弹窗
@@ -347,22 +370,45 @@ function stopChoosing() {
             <h3 style="margin: 0 0 20px 0; color: #2d3748; font-size: 22px; font-weight: 600;">选择地图导航</h3>
             <div style="margin-bottom: 25px; color: #718096; font-size: 14px; line-height: 1.5; padding: 0 20px;">${address}</div>
             <div style="display: flex; flex-direction: column; gap: 12px;">
-                <button onclick="window.open('${mapLinks.amap}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">高德地图</button>
-                <button onclick="window.open('${mapLinks.baidu}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">百度地图</button>
-                <button onclick="window.open('${mapLinks.tencent}', '_blank')" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">腾讯地图</button>
+                <button class="map-btn" data-url="${mapLinks.amap}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">高德地图</button>
+                <button class="map-btn" data-url="${mapLinks.baidu}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">百度地图</button>
+                <button class="map-btn" data-url="${mapLinks.tencent}" style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; padding: 14px 20px; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 500; transition: all 0.3s ease;">腾讯地图</button>
             </div>
-            <button onclick="this.closest('.map-modal').remove()" style="background: #f7fafc; color: #718096; border: 1px solid #e2e8f0; padding: 12px 24px; border-radius: 12px; cursor: pointer; margin-top: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">取消</button>
+            <button class="cancel-btn" style="background: #f7fafc; color: #718096; border: 1px solid #e2e8f0; padding: 12px 24px; border-radius: 12px; cursor: pointer; margin-top: 20px; font-size: 14px; font-weight: 500; transition: all 0.3s ease;">取消</button>
         `;
 
         modal.className = 'map-modal';
         modal.appendChild(modalContent);
         document.body.appendChild(modal);
 
+        // 地图按钮点击事件
+        const mapBtns = modalContent.querySelectorAll('.map-btn');
+        mapBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const url = this.getAttribute('data-url');
+                window.open(url, '_blank');
+                modal.remove();
+            });
+        });
+
+        // 取消按钮点击事件
+        const cancelBtn = modalContent.querySelector('.cancel-btn');
+        cancelBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            modal.remove();
+        });
+
         // 点击背景关闭弹窗
         modal.addEventListener('click', function(e) {
             if (e.target === modal) {
                 modal.remove();
             }
+        });
+
+        // 阻止内容区域点击事件冒泡
+        modalContent.addEventListener('click', function(e) {
+            e.stopPropagation();
         });
     }
 
