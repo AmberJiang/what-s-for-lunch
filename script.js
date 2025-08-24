@@ -190,7 +190,7 @@ function stopChoosing() {
     }
     // 检查是否有categories数组（SAP餐厅数据）
     else if (selected.categories && selected.categories.length > 0) {
-        restaurantType = selected.categories[0]; // 使用第一个分类
+        restaurantType = selected.categories[2]? selected.categories[2] : selected.categories[1]; // 使用第二个分类
     }
 
     // 触发礼花动画，传递餐厅类型
