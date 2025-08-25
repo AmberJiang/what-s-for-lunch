@@ -183,7 +183,7 @@ function stopChoosing() {
     
     // 获取餐厅类型（处理不同的数据结构）
     let restaurantType = null;
-    
+    console.log('selected restaurantType: ', restaurantType);
     // 检查是否有type字段（高德地图API）
     if (selected.type) {
         restaurantType = selected.type;

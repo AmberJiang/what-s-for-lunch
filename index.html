@@ -475,8 +475,10 @@
             font-size: 80px; /* 默认大小增加到100px（原来的5倍） */
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             animation: confetti-fall 3s linear forwards;
-            /* 确保初始位置在屏幕上方 */
-            transform: translateY(-100vh);
+            position: fixed;
+            z-index: 1000;
+            pointer-events: none;
+            /* 移除可能冲突的初始transform */
         }
 
         @keyframes confetti-fall {

@@ -163,7 +163,6 @@ function triggerConfetti(restaurantType) {
 
 // 根据餐厅类型获取对应emoji
 function getEmojiByRestaurantType(restaurantType) {
-    console.log('getEmojiByRestaurantType 接收到的餐厅类型:', restaurantType);
     // 餐厅类型到emoji的映射
     const typeToEmoji = {
         // 高德地图API类型
@@ -171,11 +170,12 @@ function getEmojiByRestaurantType(restaurantType) {
         '火锅': '🍲',
         '烧烤': '🍖',
         '快餐': '🍔',
-        '日料': '🍣',
+        '日本料理': '🍣',
         '韩料': '🍜',
         '西餐': '🍴',
         '甜品': '🍰',
         '饮品': '🥤',
+        '餐饮服务': '🍽️',
         
         // SAP餐厅数据分类
         '中餐': '🥢',
@@ -195,11 +195,48 @@ function getEmojiByRestaurantType(restaurantType) {
         '陕西菜': '🥢',
         '轻食': '🥗'
     };
+    console.log('restaurantType: ', restaurantType);
+    // 模糊搜索匹配
+    if (restaurantType) {
+        const typeString = restaurantType.toString().toLowerCase();
+        // 按优先级搜索关键词
+        const searchPatterns = [
+            { pattern: '日本料理', emoji: '🍣' },
+            { pattern: '韩料', emoji: '🍜' },
+            { pattern: '火锅', emoji: '🍲' },
+            { pattern: '烧烤', emoji: '🍖' },
+            { pattern: '快餐', emoji: '🍔' },
+            { pattern: '甜品', emoji: '🍰' },
+            { pattern: '饮品', emoji: '🥤' },
+            { pattern: '中餐厅', emoji: '🥟' },
+            { pattern: '中餐', emoji: '🥢' },
+            { pattern: '西餐', emoji: '🍴' },
+            { pattern: '湘菜', emoji: '🌶️' },
+            { pattern: '川菜', emoji: '🌶️' },
+            { pattern: '海鲜', emoji: '🦐' },
+            { pattern: '港式', emoji: '🥤' },
+            { pattern: '茶餐厅', emoji: '🥤' },
+            { pattern: '越南菜', emoji: '🍜' },
+            { pattern: '米粉', emoji: '🍜' },
+            { pattern: '日式', emoji: '🍣' },
+            { pattern: '烤肉', emoji: '🍖' },
+            { pattern: '小吃', emoji: '🍢' },
+            { pattern: '炸鸡', emoji: '🍗' },
+            { pattern: '面食', emoji: '🍜' },
+            { pattern: '陕西菜', emoji: '🥢' },
+            { pattern: '轻食', emoji: '🥗' },
+            { pattern: '家常菜', emoji: '🥡' }
+        ];
+        
+        for (const { pattern, emoji } of searchPatterns) {
+            if (typeString.includes(pattern.toLowerCase())) {
+                return emoji;
+            }
+        }
+    }
     
-    const result = typeToEmoji[restaurantType] || '🍽️';
-    console.log('返回的emoji:', result);
     // 如果没有找到对应的类型，返回默认emoji
-    return result;
+    return '🍽️';
 }
 
 // 根据餐厅类型创建emoji动画
