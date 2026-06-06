@@ -1,3 +1,4 @@
+https://amberjiang.github.io/what-s-for-lunch/
 # What's For Lunch 🍽️
 
 一个智能的午餐选择应用，帮助你解决"今天吃什么"的难题！
